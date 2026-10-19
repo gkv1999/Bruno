@@ -1,0 +1,42 @@
+info:
+  name: 02-echo-bru
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{baseURL}}"
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Bruno",
+        "msg": "Loved by developers. Built for developers."
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: tests
+      code: |-
+        test("Response status is 200", function() { 
+          expect(res.getStatus()).eql(200);
+        });
+
+        test("Body has title", function() {
+          expect(res.getBody()).to.have.property("title");
+        })
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "200"
+    - expression: res.body.title
+      operator: eq
+      value: Bruno
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: false
